@@ -36,10 +36,10 @@ export async function GET() {
       userCredits = newUser;
     }
 
-    return NextResponse.json({
-      creditsRemaining: userCredits.credits_remaining,
-      totalReportsGenerated: userCredits.total_reports_generated,
-    });
+   return NextResponse.json({
+  creditsRemaining: userCredits?.credits_remaining ?? 0,
+  totalReportsGenerated: userCredits?.total_reports_generated ?? 0,
+});
   } catch (error) {
     console.error("Error fetching credits:", error);
     return NextResponse.json(
