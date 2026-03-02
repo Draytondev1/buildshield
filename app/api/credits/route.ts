@@ -1,3 +1,5 @@
+ export const dynamic = 'force-dynamic';
+
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -36,10 +38,10 @@ export async function GET() {
       userCredits = newUser;
     }
 
-   return NextResponse.json({
-  creditsRemaining: userCredits?.credits_remaining ?? 0,
-  totalReportsGenerated: userCredits?.total_reports_generated ?? 0,
-});
+    return NextResponse.json({
+      creditsRemaining: userCredits.credits_remaining,
+      totalReportsGenerated: userCredits.total_reports_generated,
+    });
   } catch (error) {
     console.error("Error fetching credits:", error);
     return NextResponse.json(
