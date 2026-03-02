@@ -1,4 +1,4 @@
- export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -36,6 +36,14 @@ export async function GET() {
       }
 
       userCredits = newUser;
+    }
+
+    // Check if userCredits is still null after creation attempt
+    if (!userCredits) {
+      return NextResponse.json(
+        { error: "Failed to get or create user" },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
