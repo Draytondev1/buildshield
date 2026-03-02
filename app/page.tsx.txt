@@ -1,0 +1,205 @@
+"use client";
+
+import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
+import { Shield, Building2, BarChart3, FileText, ArrowRight, CheckCircle } from "lucide-react";
+
+export default function Home() {
+  const { isSignedIn } = useAuth();
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-cream to-beige">
+      {/* Navigation */}
+      <nav className="w-full px-6 py-4 flex items-center justify-between bg-white/80 backdrop-blur-sm border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          <Shield className="w-8 h-8 text-navy" />
+          <span className="text-xl font-bold text-navy">BuildShield</span>
+        </div>
+        <div className="flex items-center gap-4">
+          {isSignedIn ? (
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 text-navy hover:text-orange transition-colors"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/sign-in"
+                className="px-4 py-2 text-navy hover:text-orange transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/sign-up"
+                className="px-4 py-2 bg-orange text-white rounded-lg hover:bg-orange-hover transition-colors"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="px-6 py-20 md:py-32 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-navy/10 rounded-full text-navy text-sm font-medium mb-6">
+              <Shield className="w-4 h-4" />
+              Professional Building Assessment
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold text-navy leading-tight mb-6">
+              Know what your building has endured
+            </h1>
+            <p className="text-lg text-gray-warm mb-8 max-w-lg">
+              Professional building envelope assessments powered by 20 years of historical weather data. 
+              Get expert insights from our AI-powered analysis.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              {isSignedIn ? (
+                <Link
+                  href="/new-assessment"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-orange text-white rounded-lg hover:bg-orange-hover transition-colors font-medium"
+                >
+                  Start New Assessment
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/sign-up"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-orange text-white rounded-lg hover:bg-orange-hover transition-colors font-medium"
+                  >
+                    Start Free Assessment
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link
+                    href="/sign-in"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-navy text-navy rounded-lg hover:bg-navy hover:text-white transition-colors font-medium"
+                  >
+                    Sign In
+                  </Link>
+                </>
+              )}
+            </div>
+            <div className="mt-8 flex items-center gap-6 text-sm text-gray-warm">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                3 Free Credits
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                No Credit Card Required
+              </div>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="bg-navy rounded-2xl p-8 shadow-2xl">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                <div className="w-3 h-3 rounded-full bg-green-500" />
+              </div>
+              <div className="space-y-4">
+                <div className="bg-navy-light rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Building2 className="w-5 h-5 text-orange" />
+                    <span className="text-white font-medium">Property Assessment</span>
+                  </div>
+                  <div className="text-gray-400 text-sm">50 Saginaw Parkway, Cambridge, ON</div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-navy-light rounded-lg p-4">
+                    <div className="text-orange text-2xl font-bold">90</div>
+                    <div className="text-gray-400 text-sm">Freeze-Thaw Days/Year</div>
+                  </div>
+                  <div className="bg-navy-light rounded-lg p-4">
+                    <div className="text-orange text-2xl font-bold">916mm</div>
+                    <div className="text-gray-400 text-sm">Annual Precipitation</div>
+                  </div>
+                </div>
+                <div className="bg-navy-light rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <BarChart3 className="w-5 h-5 text-orange" />
+                    <span className="text-white font-medium">Risk Assessment</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded">HIGH</span>
+                    <span className="text-gray-400 text-sm">Overall Risk Level</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="px-6 py-20 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
+              How BuildShield Works
+            </h2>
+            <p className="text-gray-warm max-w-2xl mx-auto">
+              Our comprehensive assessment process combines historical weather data with AI-powered analysis 
+              to deliver professional-grade building envelope reports.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="p-6 rounded-xl bg-cream border border-gray-200">
+              <div className="w-12 h-12 bg-navy rounded-lg flex items-center justify-center mb-4">
+                <Building2 className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-navy mb-2">1. Property Details</h3>
+              <p className="text-gray-warm">
+                Enter your property address, roof type, and building use. We geocode the location for precise weather analysis.
+              </p>
+            </div>
+            <div className="p-6 rounded-xl bg-cream border border-gray-200">
+              <div className="w-12 h-12 bg-navy rounded-lg flex items-center justify-center mb-4">
+                <BarChart3 className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-navy mb-2">2. Weather Analysis</h3>
+              <p className="text-gray-warm">
+                Our system analyzes 20 years of historical weather data to calculate building envelope stress metrics.
+              </p>
+            </div>
+            <div className="p-6 rounded-xl bg-cream border border-gray-200">
+              <div className="w-12 h-12 bg-navy rounded-lg flex items-center justify-center mb-4">
+                <FileText className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold text-navy mb-2">3. Expert Report</h3>
+              <p className="text-gray-warm">
+                Receive a comprehensive PDF report with expert assessments, risk analysis, and actionable recommendations.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="px-6 py-8 bg-navy text-white">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Shield className="w-6 h-6" />
+            <span className="font-semibold">BuildShield</span>
+          </div>
+          <div className="text-sm text-gray-400">
+            © 2026 Waterloo Intel. All rights reserved.
+          </div>
+          <div className="flex items-center gap-6 text-sm">
+            <Link href="/privacy" className="hover:text-orange transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-orange transition-colors">
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
