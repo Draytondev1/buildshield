@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+ export const dynamic = 'force-dynamic';
 
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -252,4 +252,33 @@ export async function GET(
         <div class="footer">
           <p>© 2026 Waterloo Intel - BuildShield Platform</p>
           <p>This report was generated using AI-powered analysis of 20-year historical weather data.</p>
-        </div
+        </div>
+      </body>
+      </html>
+    `;
+
+    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+
+    const pdf = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: { top: 0, right: 0, bottom: 0, left: 0 },
+    });
+
+    await browser.close();
+
+    // Return PDF as response
+    return new NextResponse(pdf, {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="BuildShield-Report-${params.id}.pdf"`,
+      },
+    });
+  } catch (error) {
+    console.error("PDF generation error:", error);
+    return NextResponse.json(
+      { error: "Failed to generate PDF" },
+      { status: 500 }
+    );
+  }
+}
