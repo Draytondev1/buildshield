@@ -160,7 +160,7 @@ MIT License - see LICENSE file for details
 
 ## Support
 
-For support, email solutions@buildingenvelope.ca or visit our website at envelope-x.com
+For support, visit our website at envelope-x.com
 
 ## Acknowledgments
 
