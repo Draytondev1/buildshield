@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import Anthropic from "@anthropic-ai/sdk";
@@ -9,16 +9,10 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-// Geocode address using OpenStreetMap Nominatim
 async function geocodeAddress(address: string) {
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
-  console.log("Geocoding URL:", url);
-  
   const response = await fetch(url);
   const data = await response.json();
-  
-  console.log("Geocoding response:", JSON.stringify(data).substring(0, 500));
-  
   if (data && data.length > 0) {
     return {
       lat: parseFloat(data[0].lat),
@@ -29,43 +23,22 @@ async function geocodeAddress(address: string) {
   throw new Error(`Could not geocode address: "${address}"`);
 }
 
-// Fetch weather data from Visual Crossing
 async function fetchWeatherData(lat: number, lon: number) {
   const apiKey = process.env.VISUAL_CROSSING_API_KEY;
-  
-  console.log("API Key exists:", !!apiKey);
-  console.log("API Key length:", apiKey?.length);
-  
   const endDate = new Date();
   const startDate = new Date();
-  startDate.setFullYear(endDate.getFullYear() - 20);
+  startDate.setFullYear(endDate.getFullYear() - 5); // CHANGED TO 5 YEARS
   
   const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}/${startDate.toISOString().split("T")[0]}/${endDate.toISOString().split("T")[0]}?unitGroup=metric&key=${apiKey}`;
   
-  console.log("Fetching weather from URL (key hidden):", url.replace(apiKey || '', '***'));
-  
   const response = await fetch(url);
-  console.log("Response status:", response.status);
-  console.log("Response content-type:", response.headers.get('content-type'));
-  
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("Weather API error response:", errorText.substring(0, 500));
     throw new Error(`Failed to fetch weather data: ${response.status} - ${errorText.substring(0, 200)}`);
   }
-  
-  const contentType = response.headers.get('content-type');
-  if (!contentType || !contentType.includes('application/json')) {
-    const text = await response.text();
-    console.error("Unexpected response type:", contentType);
-    console.error("Response body:", text.substring(0, 500));
-    throw new Error(`Expected JSON but got ${contentType}`);
-  }
-  
   return await response.json();
 }
 
-// Calculate building envelope stress metrics from DAILY data
 function calculateMetrics(weatherData: any) {
   const days = weatherData.days || [];
   let freezeThawDays = 0;
@@ -89,16 +62,12 @@ function calculateMetrics(weatherData: any) {
     minTemp = Math.min(minTemp, dayMin);
     
     if (dayMax > 0 && dayMin < 0) freezeThawDays++;
-    
     totalPrecipitation += day.precip || 0;
     if (day.precip > 25) heavyRainEvents++;
-    
     if (day.humidity > 85) highHumidityDays++;
     totalHumidity += day.humidity || 0;
-    
     if (dayMin < -20) extremeColdDays++;
     if (dayMax > 30) extremeHeatDays++;
-    
     maxWindSpeed = Math.max(maxWindSpeed, day.windspeed || 0);
     
     if (index > 0) {
@@ -109,7 +78,6 @@ function calculateMetrics(weatherData: any) {
   });
 
   const years = days.length / 365.25;
-  
   return {
     freezeThawDays: Math.round(freezeThawDays / years),
     annualPrecipitation: Math.round(totalPrecipitation / years),
@@ -129,7 +97,7 @@ async function generateAIReport(metrics: any, buildingType: string, location: st
 Building Details:
 - Roof Type: ${roofType}
 - Roof Age: ${roofAge} years
-Weather Analysis (20-Year Historical Data):
+Weather Analysis (5-Year Historical Data):
 - Freeze-Thaw Days: ${metrics.freezeThawDays} days/year
 - Annual Precipitation: ${metrics.annualPrecipitation}mm
 - Thermal Shock Events: ${metrics.thermalShockEvents} events/year
@@ -254,4 +222,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}
